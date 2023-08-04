@@ -7,3 +7,4 @@ The user will also be provided with a choice to end the game and be shown the so
 
 The second choice takes the user to a new window with an empty Sudoku grid, where the user can input their own Sudoku puzzle and the program will solve the puzzle for them.
 If the puzzle is invalid or unsolvable, the program will notify the user of this.
+Using the calculator, the user can also create their own custom Sudoku puzzles by entering initial clues where desired and letting the program fill in the rest of the squares.
