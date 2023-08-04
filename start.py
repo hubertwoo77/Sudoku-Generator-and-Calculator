@@ -5,8 +5,6 @@ import tkinter as tk
 from tkinter import *
 from functools import partial
 
-grid = []
-puzzleGrid = []
 difficulty = ""
 
 def welcome():
@@ -36,7 +34,8 @@ def solveSudoku():
     '''
     Creates the interface for the Sudoku calculator, providing an empty sudoku grid for the user to input numbers
     '''
-    createGrid()
+    grid = []
+    grid = createGrid(grid)
     calculationGrid = randomize.flattenGrid(grid)
     indexCountForFlatPuzzle = 0
     changeNumOfButton = {}
@@ -46,7 +45,7 @@ def solveSudoku():
 
     def takeUserNum(indexNum: int):
         '''
-        Used to change a square in the Sudoku. Assume that the changeNumOfButton dictionary is already defined.
+        Used to change a square in the Sudoku. Assume that the changeNumOfButton dictionary is already defined
 
             Parameters:
                 indexNum (int): The position of the square to be changed
@@ -113,18 +112,16 @@ def solveSudoku():
 
 def loadGame():
     '''
-    Generates the sudoku puzzle and opens up a new window for the game to be played.
+    Generates the sudoku puzzle and opens up a new window for the game to be played
     '''
     global difficulty
-    global grid
-    global puzzleGrid
     grid = []
     puzzleGrid = []
-    createGrid()
+    grid = createGrid(grid)
     difficultyStr = difficulty.get()
     grid = randomize.generateRandomSolution(grid)  
-    makePuzzle(difficultyStr)  
-    #Creates puzzleGrid
+    puzzleGrid = makePuzzle(difficultyStr, puzzleGrid, grid)  
+    #Creates puzzleGrid, the Sudoku which the user will solve
     flatPuzzle = randomize.flattenGrid(puzzleGrid)
     indexCountForFlatPuzzle = 0
     changeNumOfButton = {}
@@ -135,7 +132,7 @@ def loadGame():
 
     def takeUserNum(indexNum: int):
         '''
-        Used to change a square in the Sudoku. Assume that the changeNumOfButton dictionary is already defined.
+        Used to change a square in the Sudoku. Assume that the changeNumOfButton dictionary is already defined
 
             Parameters:
                 indexNum (int): The position of the square to be changed
@@ -215,7 +212,7 @@ def createPopUp(message: str):
 
 def printGrid(grid: list):
     '''
-    Used to print the Sudoku grid in the console output rather than a window. Used for testing and debugging purposes.
+    Used to print the Sudoku grid in the console output rather than a window. Used for testing and debugging purposes
         
         Parameters:
             grid (list): The Sudoku grid to be printed
@@ -234,28 +231,40 @@ def printGrid(grid: list):
             print(row,"    ", grid[gridRow])
             row += 1
 
-def createGrid():
+def createGrid(grid: list) -> list:
     '''
     Creates a Sudoku grid
+
+        Parameters:
+            grid (list): Vairable which will hold a Sudoku grid
+
+        Returns:
+            grid (list): The variable representing the grid that was created
     '''
-    global grid
     for rows in range(9):
         row =  [['.','.','.'], ['.','.','.'], ['.','.','.']]
         grid = grid + [row]
 
+    return grid    
 
 
-def makePuzzle(userResponse: str):
+
+def makePuzzle(userResponse: str, puzzleGrid: list, grid: list) -> list:
     '''
     Making the puzzle for the user after generating a random solution
 
         Parameters:
-            userResponse (str): The difficulty that the user selected for their Sudoku (either easy, medium, or hard).
+            userResponse (str): The difficulty that the user selected for their Sudoku (either easy, medium, or hard)
+            puzzleGrid (list): The variable to represent the Sudoku puzzle  derived from "grid"
+            grid (list): The randomly genereated Sudoku solution
+
+        Returns: 
+            puzzleGrid (list): The variable representing the puzzle that was created
     '''
-    global puzzleGrid
     countOfNumsRemoved = 0
     numOfNumsNeedRemoved = 0
     puzzleGrid = deepcopy(grid)
+    #Makes a copy of "grid" (the solution), and randomly omits numbers until a puzzle is formed
     if userResponse == "EASY":
         numOfNumsNeedRemoved = 45
     elif userResponse == "MEDIUM":
@@ -269,3 +278,4 @@ def makePuzzle(userResponse: str):
         if puzzleGrid[randomGridRow][randomGridColumn][randomGridSpace].isdigit():
             puzzleGrid[randomGridRow][randomGridColumn][randomGridSpace] = "."
             countOfNumsRemoved += 1
+    return puzzleGrid        
